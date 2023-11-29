@@ -22,7 +22,6 @@ jobs:
         run: echo "COMMIT_MESSAGE=Generate Doxygen documentation" >> $GITHUB_ENV
 
       - name: Create report file
-        if: env.LAST_COMMIT_IS_DOCUMENTATION == 'false'
         run: date +%s > report.txt
 
       - name: Check for modified files
