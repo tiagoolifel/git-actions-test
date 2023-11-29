@@ -16,6 +16,10 @@ jobs:
       - name: Install Doxygen
         run: sudo apt-get update && sudo apt-get install -y doxygen
 
+      - name: Check Committer
+        id: check-committer
+        run: echo "::set-output name=is_committer::$(if [ "$(git log -1 --pretty=%B)" == 'Generate Doxygen documentation' ]; then echo false; else echo true; fi)"
+
       - name: Commit and Push Documentation
         run: |
           git config user.name "${{ github.actor }}"
