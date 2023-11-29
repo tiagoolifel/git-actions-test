@@ -24,6 +24,7 @@ jobs:
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git remote set-url origin https://${{ github.actor }}:$GITHUB_TOKEN@github.com/${{ github.repository }}
           mkdir testFolder
           git add testFolder
           git status
