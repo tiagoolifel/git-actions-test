@@ -6,9 +6,9 @@ on:
       - main
 
 jobs:
-  permissions:
-    contents: write
   generate-docs:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
 
     steps:
