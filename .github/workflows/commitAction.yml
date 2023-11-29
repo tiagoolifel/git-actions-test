@@ -29,13 +29,13 @@ jobs:
         id: git-check
         run: |
           if [ -n "$(git status --porcelain)" ]; then
-            echo "modified=true" >> $GITHUB_ENV
+            echo "MODIFIED=true" >> $GITHUB_ENV
           else
-            echo "modified=false" >> $GITHUB_ENV
+            echo "MODIFIED=false" >> $GITHUB_ENV
           fi
 
       - name: Commit Documentation in GitHub repository
-        if: steps.git-check.outputs.modified == 'true'
+        if: env.MODIFIED == 'true'
         run:  |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
