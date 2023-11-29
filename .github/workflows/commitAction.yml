@@ -20,18 +20,23 @@ jobs:
         id: check-committer
         run: echo "::set-output name=is_committer::$(if [ "$(git log -1 --pretty=%B)" == 'Generate Doxygen documentation' ]; then echo false; else echo true; fi)"
 
-      - name: Check for Changes
-        id: check-changes
-        run: echo "::set-output name=has_changes::$(git status --porcelain)"
-
-      - name: Commit and Push Documentation
+      - name: Commit Documentation
         if: steps.check-changes.outputs.has_changes != ''
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
+          mkdir testFolder
           git add .
+          git commit -m "Generate Doxygen documentation"
+
+      - name: Check for Changes
+        id: check-changes
+        run: echo "::set-output name=has_changes::$(git status --porcelain)"
+
+      - name: Push Documentation
+        if: steps.check-changes.outputs.has_changes != ''
+        run: |
           git commit -m "Generate Doxygen documentation"
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
