@@ -21,15 +21,6 @@ jobs:
       - name: Set Commit Message
         run: echo "COMMIT_MESSAGE=Generate Doxygen documentation" >> $GITHUB_ENV
 
-      - name: Check Committer
-        id: check-committer
-        run: |
-         if [ "$(git log -1 --pretty=%B)" == "${{ env.COMMIT_MESSAGE }}" ]; then
-            echo "LAST_COMMIT_IS_DOCUMENTATION=true" >> $GITHUB_ENV
-          else
-            echo "LAST_COMMIT_IS_DOCUMENTATION=false" >> $GITHUB_ENV
-          fi
-
       - name: Create report file
         if: env.LAST_COMMIT_IS_DOCUMENTATION == 'false'
         run: date +%s > report.txt
