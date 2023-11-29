@@ -20,9 +20,16 @@ jobs:
 
       - name: Check Committer
         id: check-committer
-        run: echo "::set-output name=is_committer::$(if [ "$(git log -1 --pretty=%B)" == 'Generate Doxygen documentation' ]; then echo false; else echo true; fi)"
+        run: |
+         echo "::set-output name=is_committer::$(if [ "$(git log -1 --pretty=%B)" == 'Generate Doxygen documentation' ]; then echo false; else echo true; fi)"
+         if [ "$(git log -1 --pretty=%B)" == 'Generate Doxygen documentation' ]; then
+            echo "LAST_COMMIT_IS_DOCUMENTATION=true" >> $GITHUB_ENV
+          else
+            echo "LAST_COMMIT_IS_DOCUMENTATION=false" >> $GITHUB_ENV
+          fi
 
       - name: Create report file
+        if: env.LAST_COMMIT_IS_DOCUMENTATION == 'false'
         run: date +%s > report.txt
 
       - name: Check for modified files
@@ -45,3 +52,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODIFIED: ${{ env.MODIFIED }}
+          LAST_COMMIT_IS_DOCUMENTATION: ${{ env.LAST_COMMIT_IS_DOCUMENTATION }}
