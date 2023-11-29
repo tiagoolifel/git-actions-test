@@ -27,7 +27,12 @@ jobs:
 
       - name: Check for modified files
         id: git-check
-        run: echo ::set-output name=modified::$(if [ -n "$(git status --porcelain)" ]; then echo "true"; else echo "false"; fi)
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "modified=true" >> $GITHUB_ENV
+          else
+            echo "modified=false" >> $GITHUB_ENV
+          fi
 
       - name: Commit Documentation in GitHub repository
         if: steps.git-check.outputs.modified == 'true'
@@ -39,3 +44,4 @@ jobs:
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MODIFIED: ${{ env.MODIFIED }}
