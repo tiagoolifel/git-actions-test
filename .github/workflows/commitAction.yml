@@ -20,24 +20,21 @@ jobs:
         id: check-committer
         run: echo "::set-output name=is_committer::$(if [ "$(git log -1 --pretty=%B)" == 'Generate Doxygen documentation' ]; then echo false; else echo true; fi)"
 
-      - name: Commit Documentation
-        run: |
+      - name: Create report file
+        run: date +%s > report.txt
+
+      - name: Check for modified files
+        id: git-check
+        run: echo ::set-output name=modified::$(if [ -n "$(git status --porcelain)" ]; then echo "true"; else echo "false"; fi)
+
+      - name: Commit Documentation in GitHub repository
+        if: steps.git-check.outputs.modified == 'true'
+        run:  |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git remote set-url origin https://${{ github.actor }}:$GITHUB_TOKEN@github.com/${{ github.repository }}
-          mkdir testFolder
-          git add testFolder
-          git status
+          git add -A
           git commit -m "Generate Doxygen documentation"
-
-
-      - name: Check for Changes
-        id: check-changes
-        run: echo "::set-output name=has_changes::$(git status --porcelain)"
-
-      - name: Push Documentation
-        if: steps.check-changes.outputs.has_changes != ''
-        run: |
           git push
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
