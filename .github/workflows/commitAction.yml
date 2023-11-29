@@ -26,6 +26,7 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           mkdir testFolder
           git add testFolder
+          git status
           git commit -m "Generate Doxygen documentation"
 
 
