@@ -21,7 +21,7 @@ jobs:
       - name: Check Committer
         id: check-committer
         run: |
-         if [ "$(git log -1 --pretty=%B)" == ${{ env.COMMIT_MESSAGE }} ]; then
+         if [ "$(git log -1 --pretty=%B)" == "${{ env.COMMIT_MESSAGE }}" ]; then
             echo "LAST_COMMIT_IS_DOCUMENTATION=true" >> $GITHUB_ENV
           else
             echo "LAST_COMMIT_IS_DOCUMENTATION=false" >> $GITHUB_ENV
@@ -46,7 +46,7 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git add -A
-          git commit -m ${{ env.COMMIT_MESSAGE }}
+          git commit -m "${{ env.COMMIT_MESSAGE }}"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
