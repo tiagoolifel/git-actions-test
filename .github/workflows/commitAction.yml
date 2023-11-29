@@ -26,6 +26,8 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           mkdir testFolder
           git add testFolder
+          git commit -m "Generate Doxygen documentation"
+
 
       - name: Check for Changes
         id: check-changes
@@ -34,7 +36,6 @@ jobs:
       - name: Push Documentation
         if: steps.check-changes.outputs.has_changes != ''
         run: |
-          git commit -m "Generate Doxygen documentation"
-          git push origin main
+          git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
